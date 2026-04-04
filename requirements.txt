@@ -1,0 +1,5 @@
+# This is a Node.js project
+# Python dependencies are not required
+# All dependencies are managed via package.json and npm
+
+# If you need to run any Python scripts in the future, add them here
