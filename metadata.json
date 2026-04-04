@@ -1,0 +1,5 @@
+{
+  "name": "TrigunaMind: Emotional Stability Predictor",
+  "description": "An IKS-based AI application that predicts emotional stability using Sattva, Rajas, and Tamas Guna theory.",
+  "requestFramePermissions": []
+}
