@@ -12,7 +12,35 @@ import { questions, calculateScores } from './constants';
 import TrigunaChatbot from './components/TrigunaChatbot';
 import { TrigunaLogo } from './components/TrigunaLogo';
 import { cn } from './lib/utils';
-
+const InfoModal = ({ activeInfoSection, setActiveInfoSection, infoSections }: {
+  activeInfoSection: 'theory' | 'research' | 'guide' | null;
+  setActiveInfoSection: (v: 'theory' | 'research' | 'guide' | null) => void;
+  infoSections: any;
+}) => (
+  <AnimatePresence>
+    {activeInfoSection && (
+      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          onClick={() => setActiveInfoSection(null)}
+          className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
+        <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+          <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <h3 className="text-xl font-bold text-slate-800">{infoSections[activeInfoSection].title}</h3>
+            <button onClick={() => setActiveInfoSection(null)} className="p-2 hover:bg-slate-200 rounded-full transition-colors">
+              <ChevronLeft size={24} className="rotate-90 text-slate-400" />
+            </button>
+          </div>
+          <div className="p-8 max-h-[70vh] overflow-y-auto">{infoSections[activeInfoSection].content}</div>
+          <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end">
+            <button onClick={() => setActiveInfoSection(null)} className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors">Close</button>
+          </div>
+        </motion.div>
+      </div>
+    )}
+  </AnimatePresence>
+);
 export default function App() {
   const [step, setStep] = useState<'landing' | 'quiz' | 'results'>('landing');
   const [responses, setResponses] = useState<Record<number, number>>({});
@@ -185,31 +213,7 @@ export default function App() {
   const currentCategory = questions[currentQuestionIdx]?.category;
   const theme = currentCategory ? categoryTheme[currentCategory] : categoryTheme.Aahara;
 
-  const InfoModal = () => (
-    <AnimatePresence>
-      {activeInfoSection && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={() => setActiveInfoSection(null)}
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
-          <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="text-xl font-bold text-slate-800">{infoSections[activeInfoSection].title}</h3>
-              <button onClick={() => setActiveInfoSection(null)} className="p-2 hover:bg-slate-200 rounded-full transition-colors">
-                <ChevronLeft size={24} className="rotate-90 text-slate-400" />
-              </button>
-            </div>
-            <div className="p-8 max-h-[70vh] overflow-y-auto">{infoSections[activeInfoSection].content}</div>
-            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end">
-              <button onClick={() => setActiveInfoSection(null)} className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors">Close</button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
+
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100">
@@ -232,7 +236,11 @@ export default function App() {
         </div>
       </header>
 
-      <InfoModal />
+      <InfoModal
+        activeInfoSection={activeInfoSection}
+        setActiveInfoSection={setActiveInfoSection}
+        infoSections={infoSections}
+      />
 
       <main className="max-w-7xl mx-auto px-6 py-12">
         <AnimatePresence mode="wait">
